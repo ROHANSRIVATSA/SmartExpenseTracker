@@ -33,7 +33,6 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
     alert('Data export feature coming soon!');
   };
 
-  // POLISH FEATURE 3: Clear all data - actually works now
   const handleDeleteAllData = () => {
     onClearAllExpenses();
     alert('All expense data has been cleared.');
@@ -41,7 +40,6 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
 
   return (
     <div className="h-full flex flex-col bg-white">
-      {/* Header */}
       <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100">
         <button onClick={onBack} className="p-1 hover:bg-gray-100 rounded-lg transition-colors">
           <ChevronLeft className="w-6 h-6 text-gray-700" />
@@ -50,9 +48,7 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
         <div className="w-6" />
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 px-6 py-8 overflow-y-auto space-y-6">
-        {/* Privacy Statement */}
         <Card className="p-6 bg-teal-50 border-2 border-teal-100">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center flex-shrink-0">
@@ -65,11 +61,9 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
           </div>
         </Card>
 
-        {/* Privacy Toggles */}
         <Card className="p-6 space-y-6">
           <h3 className="text-gray-900 font-semibold">Privacy Settings</h3>
 
-          {/* Share with family/friends */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <Label htmlFor="share-family" className="text-gray-900 cursor-pointer font-medium">
@@ -88,7 +82,6 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
 
           <Separator />
 
-          {/* Notifications */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <Label htmlFor="notifications" className="text-gray-900 cursor-pointer font-medium">
@@ -107,7 +100,6 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
 
           <Separator />
 
-          {/* Category suggestions */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <Label htmlFor="category-suggestions" className="text-gray-900 cursor-pointer font-medium">
@@ -125,7 +117,6 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
           </div>
         </Card>
 
-        {/* Data Usage Explanation */}
         <Card className="p-6 bg-gray-50">
           <h3 className="text-gray-900 mb-4 font-semibold">What We Collect</h3>
           <div className="space-y-3">
@@ -140,7 +131,6 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
           </div>
         </Card>
 
-        {/* Data Control Buttons */}
         <div className="space-y-3 pb-8">
           <Button
             onClick={handleExportData}
@@ -151,7 +141,6 @@ export function PrivacyControlsScreen({ onBack, onClearAllExpenses }: PrivacyCon
             Export My Data
           </Button>
 
-          {/* POLISH FEATURE 3: Clear all data button - now works */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="outline" className="w-full text-red-600 hover:text-red-700 hover:bg-red-50">

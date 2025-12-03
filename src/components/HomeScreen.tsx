@@ -70,7 +70,6 @@ export function HomeScreen({
 
   return (
     <div className="h-full flex flex-col bg-white">
-      {/* Header */}
       <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100">
         <Sheet>
           <SheetTrigger asChild>
@@ -112,9 +111,7 @@ export function HomeScreen({
         <div className="w-6" />
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 pb-20">
-        {/* Scan Button */}
         <div className="mb-16">
           <button
             onClick={onScanReceipt}
@@ -143,7 +140,6 @@ export function HomeScreen({
           </button>
         </div>
 
-        {/* Category List */}
         <div className="w-full space-y-3">
           {categories.map((cat) => {
             const total = getCategoryTotal(cat.name);
@@ -176,12 +172,10 @@ export function HomeScreen({
         </div>
       </div>
 
-      {/* Navigation Hint */}
       <div className="px-6 py-3 text-center text-gray-400">
         {expenses.length > 0 ? 'Tap categories to view insights' : 'Tap the button to scan your first receipt'}
       </div>
 
-      {/* Floating Add Button */}
       <Dialog open={openAdd} onOpenChange={setOpenAdd}>
         <DialogTrigger asChild>
           <button

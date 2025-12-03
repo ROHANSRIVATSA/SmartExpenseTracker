@@ -23,7 +23,7 @@ export default function App() {
   ]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Mock historical week data
+  // historical week data
   const [previousWeeks] = useState<WeekData[]>([
     {
       weekNumber: 1,
@@ -97,13 +97,20 @@ export default function App() {
     setExpenses([...expenses, newExpense]);
   };
 
-  // POLISH FEATURE 1: Delete expense
   const handleDeleteExpense = (id: string) => {
     const updatedExpenses = expenses.filter(exp => exp.id !== id);
     setExpenses(updatedExpenses);
   };
 
-  // POLISH FEATURE 3: Clear all expenses
+  const handleUpdateExpense = (id: string, amount: number, category: string, description: string) => {
+    const updatedExpenses = expenses.map(exp =>
+      exp.id === id
+        ? { ...exp, amount, category, description }
+        : exp
+    );
+    setExpenses(updatedExpenses);
+  };
+
   const handleClearAllExpenses = () => {
     setExpenses([]);
   };
@@ -128,9 +135,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      {/* iPhone Frame */}
       <div className="relative w-[375px] h-[812px] bg-white rounded-[3rem] shadow-2xl overflow-hidden border-8 border-gray-800">
-        {/* Screen Content */}
         <div className="w-full h-full overflow-y-auto bg-white">
           {currentScreen === 'home' && (
             <HomeScreen 
@@ -153,6 +158,7 @@ export default function App() {
               onBackToHome={handleBackToHome}
               onAddExpense={handleAddExpense}
               onDeleteExpense={handleDeleteExpense}
+              onUpdateExpense={handleUpdateExpense}
             />
           )}
           {currentScreen === 'insights' && (
@@ -161,6 +167,7 @@ export default function App() {
               expenses={expenses}
               selectedCategory={selectedCategory}
               onDeleteExpense={handleDeleteExpense}
+              onUpdateExpense={handleUpdateExpense}
             />
           )}
           {currentScreen === 'weeklySummary' && (
@@ -185,7 +192,6 @@ export default function App() {
           )}
         </div>
 
-        {/* Home Indicator (iPhone) */}
         <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gray-800 rounded-full" />
       </div>
     </div>

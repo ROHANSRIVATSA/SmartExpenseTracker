@@ -10,10 +10,6 @@ interface CoachMessage {
 /**
  * React Hook for AI Coach Messages
  * Memoized for performance - only recalculates when expenses change
- * 
- * Usage:
- * const coach = useCoachMessage(expenses);
- * <p>{coach.message}</p>
  */
 export function useCoachMessage(expenses: Expense[]): CoachMessage {
   return useMemo(() => {

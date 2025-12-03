@@ -13,7 +13,6 @@ interface CategorySpending {
 /**
  * Generates AI coach messages based on spending patterns
  * Designed to be encouraging and supportive, never shaming or judgmental
- * This is HCI-focused - the tone is protective, not punitive
  */
 export function getCoachResponse(expenses: Expense[], previousWeekTotal?: number): CoachMessage {
   const weekTotal = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -76,7 +75,7 @@ export function getCoachResponse(expenses: Expense[], previousWeekTotal?: number
   // Moderate spending ($50-$100)
   if (weekTotal >= 50 && weekTotal < 100) {
     return {
-      text: "I notice you're exploring a bit this week. That's okay—awareness is the first step.",
+      text: "I notice you're exploring a bit this week. That's okay! Awareness is the first step.",
       tone: 'curious',
       color: 'from-purple-50 to-pink-50'
     };
@@ -137,14 +136,3 @@ export function getProgressMessage(weeksTracked: number): string {
   
   return "Keep tracking to build awareness.";
 }
-
-/**
- * HCI Design Note: These messages are intentionally:
- * - Supportive, never shaming
- * - Curious, not judgmental
- * - Encouraging autonomy, not controlling
- * - Focused on awareness, not guilt
- * 
- * This protects against the "Financial Shame App" oppositional design
- * by ensuring the same data collection can't be weaponized through tone.
- */

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
@@ -28,7 +26,6 @@ function SheetPortal({
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
 
-// FIX 1: Wrap SheetOverlay with React.forwardRef
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
   React.ComponentProps<typeof SheetPrimitive.Overlay>
@@ -102,7 +99,6 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-// FIX 2: Wrap SheetTitle with React.forwardRef
 const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
   React.ComponentProps<typeof SheetPrimitive.Title>
@@ -116,7 +112,6 @@ const SheetTitle = React.forwardRef<
 ));
 SheetTitle.displayName = "SheetTitle";
 
-// FIX 3: Wrap SheetDescription with React.forwardRef
 const SheetDescription = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Description>,
   React.ComponentProps<typeof SheetPrimitive.Description>

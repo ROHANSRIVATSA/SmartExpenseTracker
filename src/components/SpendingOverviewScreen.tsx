@@ -1,9 +1,10 @@
-import { ChevronLeft, Download, List, MessageCircle, TrendingDown, TrendingUp } from 'lucide-react@0.487.0';
+import { ChevronLeft, Download, List, MessageCircle, TrendingDown, TrendingUp } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import type { Expense } from '../types';
 import { getTrendMessage, getProgressMessage } from '../utils/coachResponses';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React from 'react';
 
 interface WeekData {
   weekNumber: number;
@@ -57,18 +58,15 @@ export function SpendingOverviewScreen({
 
   return (
     <div className="h-full flex flex-col bg-white">
-      {/* Header */}
       <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100">
         <button onClick={onBack} className="p-1 hover:bg-gray-100 rounded-lg transition-colors">
           <ChevronLeft className="w-6 h-6 text-gray-700" />
         </button>
         <span className="text-gray-900">Spending Overview</span>
-        <div className="w-6" /> {/* Spacer */}
+        <div className="w-6" />
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 px-6 py-8 overflow-y-auto space-y-6">
-        {/* Current Week Card */}
         <Card className="p-6 bg-gradient-to-br from-teal-50 to-blue-50 border-2 border-teal-200">
           <h3 className="text-gray-900 mb-4">This Week</h3>
           <div className="flex items-end justify-between mb-4">
@@ -90,7 +88,6 @@ export function SpendingOverviewScreen({
             </div>
           </div>
 
-          {/* Mini chart */}
           {chartData.length > 1 && (
             <div className="h-32 mt-4">
               <ResponsiveContainer width="100%" height="100%">
@@ -126,7 +123,6 @@ export function SpendingOverviewScreen({
           )}
         </Card>
 
-        {/* Previous Weeks List */}
         {previousWeeks.length > 0 && (
           <div>
             <h3 className="text-gray-900 mb-3">Previous Weeks</h3>
@@ -149,7 +145,6 @@ export function SpendingOverviewScreen({
           </div>
         )}
 
-        {/* Monthly Insights */}
         {weeksTracked >= 4 && (
           <Card className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-100">
             <h3 className="text-gray-900 mb-3">Last 4 Weeks</h3>
@@ -164,7 +159,6 @@ export function SpendingOverviewScreen({
           </Card>
         )}
 
-        {/* Coach Insight for Trends */}
         <Card className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-100">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center flex-shrink-0">
@@ -178,7 +172,6 @@ export function SpendingOverviewScreen({
           </div>
         </Card>
 
-        {/* Action Buttons */}
         <div className="space-y-3 pb-8">
           <Button variant="outline" className="w-full">
             <Download className="w-4 h-4 mr-2" strokeWidth={2} />

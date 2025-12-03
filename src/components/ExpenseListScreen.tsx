@@ -15,6 +15,7 @@ interface ExpenseListScreenProps {
   onBackToHome: () => void;
   onAddExpense: (amount: number, category: string, description: string) => void;
   onDeleteExpense: (id: string) => void;
+  onUpdateExpense: (id: string, amount: number, category: string, description: string) => void;
 }
 
 export function ExpenseListScreen({ 
@@ -22,7 +23,8 @@ export function ExpenseListScreen({
   onViewInsights, 
   onBackToHome, 
   onAddExpense,
-  onDeleteExpense 
+  onDeleteExpense,
+  onUpdateExpense
 }: ExpenseListScreenProps) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState('');
@@ -32,6 +34,7 @@ export function ExpenseListScreen({
   const [editAmount, setEditAmount] = useState('');
   const [editCategory, setEditCategory] = useState('');
   const [editDescription, setEditDescription] = useState('');
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   // Calculate totals by category
   const getCategoryTotal = (categoryName: string): number => {
@@ -59,32 +62,21 @@ export function ExpenseListScreen({
     }
   };
 
-  // POLISH FEATURE 1: Edit expense dialog
+  //Edit expense dialog
   const handleEditExpense = (expense: Expense) => {
     setEditingId(expense.id);
     setEditAmount(expense.amount.toString());
     setEditCategory(expense.category);
     setEditDescription(expense.description);
+    setEditDialogOpen(true);
   };
 
   const handleSaveEdit = () => {
-    // Find and update the expense
-    const updatedExpenses = expenses.map(exp => 
-      exp.id === editingId
-        ? { 
-            ...exp, 
-            amount: parseFloat(editAmount), 
-            category: editCategory, 
-            description: editDescription 
-          }
-        : exp
-    );
-    // Re-set expenses (would need onUpdateExpenses callback, using delete+add as workaround)
     if (editingId) {
-      onDeleteExpense(editingId);
-      onAddExpense(parseFloat(editAmount), editCategory, editDescription);
+      onUpdateExpense(editingId, parseFloat(editAmount), editCategory, editDescription);
     }
     setEditingId(null);
+    setEditDialogOpen(false);
   };
 
   const handleViewAllInsights = () => {
@@ -93,7 +85,6 @@ export function ExpenseListScreen({
 
   return (
     <div className="h-full flex flex-col bg-white">
-      {/* Header */}
       <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100">
         <button onClick={onBackToHome} className="p-1 hover:bg-gray-100 rounded-lg transition-colors">
           <ChevronLeft className="w-6 h-6 text-gray-700" />
@@ -102,15 +93,12 @@ export function ExpenseListScreen({
         <div className="w-6" />
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 px-6 py-8 overflow-y-auto pb-24">
-        {/* Spending Circle */}
         <div className="flex flex-col items-center mb-12">
           <div 
             className="relative w-48 h-48 mb-4 cursor-pointer hover:opacity-80 transition-opacity" 
             onClick={handleViewAllInsights}
           >
-            {/* Outer circle */}
             <svg className="w-full h-full transform -rotate-90">
               <circle
                 cx="96"
@@ -132,7 +120,6 @@ export function ExpenseListScreen({
                 strokeLinecap="round"
               />
             </svg>
-            {/* Center amount */}
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-gray-900">${totalSpending.toFixed(2)}</span>
             </div>
@@ -140,7 +127,6 @@ export function ExpenseListScreen({
           <p className="text-gray-500">Total this week</p>
         </div>
 
-        {/* Category Breakdown */}
         <div className="space-y-3 mb-6">
           {categories.map((cat) => {
             const total = getCategoryTotal(cat.name);
@@ -173,7 +159,6 @@ export function ExpenseListScreen({
             );
           })}
 
-          {/* Empty Placeholders */}
           {[1, 2].map((i) => (
             <Card key={`empty-${i}`} className="p-4 flex items-center justify-between opacity-40">
               <div className="flex items-center gap-3">
@@ -185,7 +170,6 @@ export function ExpenseListScreen({
           ))}
         </div>
 
-        {/* Recent Expenses List */}
         {expenses.length > 0 && (
           <div className="mt-8">
             <h3 className="text-gray-900 font-semibold mb-3">Recent Expenses</h3>
@@ -198,7 +182,6 @@ export function ExpenseListScreen({
                   </div>
                   <div className="flex items-center gap-2">
                     <p className="text-gray-900 font-semibold">${expense.amount.toFixed(2)}</p>
-                    {/* POLISH FEATURE 1: Delete button */}
                     <button
                       onClick={() => onDeleteExpense(expense.id)}
                       className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
@@ -206,73 +189,13 @@ export function ExpenseListScreen({
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
-                    {/* POLISH FEATURE 2: Edit button */}
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <button
-                          onClick={() => handleEditExpense(expense)}
-                          className="p-1 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded transition-colors"
-                          title="Edit"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>Edit Expense</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="edit-amount">Amount</Label>
-                            <Input
-                              id="edit-amount"
-                              type="number"
-                              step="0.01"
-                              value={editAmount}
-                              onChange={(e) => setEditAmount(e.target.value)}
-                              className="col-span-3"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="edit-category">Category</Label>
-                            <div className="col-span-3">
-                              <Select value={editCategory} onValueChange={setEditCategory}>
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {categories.map((cat) => (
-                                    <SelectItem key={cat.name} value={cat.name}>
-                                      {cat.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="edit-description">Description</Label>
-                            <Input
-                              id="edit-description"
-                              value={editDescription}
-                              onChange={(e) => setEditDescription(e.target.value)}
-                              className="col-span-3"
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button variant="outline" onClick={() => setEditingId(null)}>
-                            Cancel
-                          </Button>
-                          <Button 
-                            onClick={handleSaveEdit}
-                            className="bg-teal-600 hover:bg-teal-700"
-                          >
-                            Save Changes
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                    <button
+                      onClick={() => handleEditExpense(expense)}
+                      className="p-1 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded transition-colors"
+                      title="Edit"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </Card>
               ))}
@@ -280,13 +203,69 @@ export function ExpenseListScreen({
           </div>
         )}
 
-        {/* Hint text */}
         <p className="text-center text-gray-400 mt-6">
           {expenses.length > 0 ? 'Tap on categories to view insights' : 'Add your first expense'}
         </p>
       </div>
 
-      {/* Floating Add Button */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Expense</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-amount">Amount</Label>
+              <Input
+                id="edit-amount"
+                type="number"
+                step="0.01"
+                value={editAmount}
+                onChange={(e) => setEditAmount(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-category">Category</Label>
+              <div className="col-span-3">
+                <Select value={editCategory} onValueChange={setEditCategory}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.name} value={cat.name}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-description">Description</Label>
+              <Input
+                id="edit-description"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleSaveEdit}
+              className="bg-teal-600 hover:bg-teal-700"
+            >
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <button
